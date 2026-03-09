@@ -2,131 +2,43 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Commande Tee-shirt</title>
-
+<title>Commander votre Tee-shirt</title>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:Arial;
-}
-
-body{
-background:#f5f5f5;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-}
-
-.card{
-background:white;
-border-radius:20px;
-width:90%;
-max-width:400px;
-padding:30px;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
-text-align:center;
-}
-
-.card h2{
-margin-bottom:10px;
-font-size:24px;
-}
-
-.subtitle{
-margin-bottom:20px;
-color:#555;
-font-size:14px;
-}
-
-input{
-width:90%;
-padding:12px;
-margin:10px 0;
-border-radius:8px;
-border:1px solid #ddd;
-}
-
-.sizes{
-display:flex;
-justify-content:center;
-gap:10px;
-margin:15px 0 25px;
-flex-wrap:wrap;
-}
-
-.size-btn{
-flex:1 1 40%;
-padding:12px 0;
-border:2px solid black;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
-transition:0.3s;
-}
-
-.size-btn.active{
-background:black;
-color:white;
-transform:scale(1.05);
-}
-
-button.submit{
-background:black;
-color:white;
-border:none;
-padding:14px;
-width:100%;
-border-radius:12px;
-font-size:16px;
-cursor:pointer;
-}
-
-button.submit:hover{
-background:#333;
-}
-
-.success{
-color:green;
-margin-top:15px;
-font-weight:bold;
-}
-
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial;}
+body{background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;}
+.card{background:white;border-radius:20px;width:90%;max-width:400px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2);text-align:center;}
+.card h2{margin-bottom:10px;font-size:24px;}
+.subtitle{margin-bottom:20px;color:#555;font-size:14px;}
+input{width:90%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid #ddd;}
+.sizes{display:flex;justify-content:center;gap:10px;margin:15px 0 25px;flex-wrap:wrap;}
+.size-btn{flex:1 1 40%;padding:12px 0;border:2px solid black;border-radius:10px;cursor:pointer;font-weight:bold;transition:0.3s;}
+.size-btn.active{background:black;color:white;transform:scale(1.05);}
+button.submit{background:black;color:white;border:none;padding:14px;width:100%;border-radius:12px;font-size:16px;cursor:pointer;}
+button.submit:hover{background:#333;}
+.success{color:green;margin-top:15px;font-weight:bold;}
+@media (max-width:480px){.card{padding:20px;}.size-btn{flex:1 1 45%;font-size:14px;}}
 </style>
 
 </head>
 
 <body>
-
 <div class="card">
-
 <h2>Commander votre Tee-shirt</h2>
-
-<div class="subtitle">
-Paiement à la vie scolaire
-</div>
+<div class="subtitle">Paiement à la vie scolaire</div>
 
 <form id="orderForm">
 
 <input type="text" name="nom" placeholder="Nom" required>
-
 <input type="text" name="prenom" placeholder="Prénom" required>
-
 <input type="email" name="email" placeholder="Adresse mail" required>
-
 <input type="tel" name="telephone" placeholder="Numéro de téléphone" required>
-
 <input type="number" name="quantite" placeholder="Quantité de tee-shirts" min="1" max="10" required>
 
 <p>Choisir la taille :</p>
-
 <div class="sizes">
 <div class="size-btn" data-size="XS">XS</div>
 <div class="size-btn" data-size="S">S</div>
@@ -137,51 +49,33 @@ Paiement à la vie scolaire
 <input type="hidden" name="taille" id="taille">
 
 <button class="submit" type="submit">Commander</button>
-
 <div class="success" id="successMsg"></div>
 
 </form>
-
 </div>
 
 <script>
-
-(function(){
-emailjs.init("kDo3uvb5PTqrYJUHt");
-})();
+(function(){emailjs.init("TON_PUBLIC_KEY");})();
 
 let sizeButtons=document.querySelectorAll(".size-btn");
 let tailleInput=document.getElementById("taille");
-
 sizeButtons.forEach(btn=>{
 btn.addEventListener("click",function(){
-
 sizeButtons.forEach(b=>b.classList.remove("active"));
-
 this.classList.add("active");
-
 tailleInput.value=this.dataset.size;
-
 });
 });
 
 document.getElementById("orderForm").addEventListener("submit",function(e){
-
 e.preventDefault();
-
-emailjs.sendForm("service_uztjipa","template_7pq5h6z",this)
+emailjs.sendForm("TON_SERVICE_ID","TON_TEMPLATE_ID",this)
 .then(function(){
-
 window.location.href="confirmation.html";
-
 },function(error){
-
 alert("Erreur : "+JSON.stringify(error));
-
 });
-
 });
-
 </script>
 
 </body>
