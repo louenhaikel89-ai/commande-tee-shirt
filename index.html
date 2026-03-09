@@ -121,6 +121,10 @@ Paiement à la vie scolaire
 
 <input type="email" name="email" placeholder="Adresse mail" required>
 
+<input type="tel" name="telephone" placeholder="Numéro de téléphone" required>
+
+<input type="number" name="quantite" placeholder="Quantité de tee-shirts" min="1" max="10" required>
+
 <p>Choisir la taille :</p>
 
 <div class="sizes">
@@ -168,7 +172,7 @@ e.preventDefault();
 emailjs.sendForm("service_uztjipa","template_7pq5h6z",this)
 .then(function(){
 
-document.getElementById("successMsg").innerText="Commande envoyée ✅";
+window.location.href="confirmation.html";
 
 },function(error){
 
