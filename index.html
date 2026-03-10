@@ -55,7 +55,7 @@ button.submit:hover{background:#333;}
 </div>
 
 <script>
-(function(){emailjs.init("TON_PUBLIC_KEY");})();
+(function(){emailjs.init("kDo3uvb5PTqrYJUHt");})();
 
 let sizeButtons=document.querySelectorAll(".size-btn");
 let tailleInput=document.getElementById("taille");
@@ -69,7 +69,7 @@ tailleInput.value=this.dataset.size;
 
 document.getElementById("orderForm").addEventListener("submit",function(e){
 e.preventDefault();
-emailjs.sendForm("TON_SERVICE_ID","TON_TEMPLATE_ID",this)
+emailjs.sendForm(service_uztjipa,"template_7pq5h6z",this)
 .then(function(){
 window.location.href="confirmation.html";
 },function(error){
@@ -80,3 +80,4 @@ alert("Erreur : "+JSON.stringify(error));
 
 </body>
 </html>
+
