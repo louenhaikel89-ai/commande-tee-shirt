@@ -36,8 +36,21 @@ text-align:center;
 }
 
 .card h2{
-margin-bottom:10px;
+margin-bottom:5px;
 font-size:24px;
+}
+
+.price{
+font-size:28px;
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.price::after{
+content:" TTC";
+font-size:14px;
+color:#777;
+margin-left:5px;
 }
 
 .subtitle{
@@ -52,6 +65,13 @@ padding:12px;
 margin:10px 0;
 border-radius:8px;
 border:1px solid #ddd;
+}
+
+#totalPrice{
+margin-top:10px;
+font-size:18px;
+font-weight:bold;
+color:#111;
 }
 
 .sizes{
@@ -93,12 +113,6 @@ button.submit:hover{
 background:#333;
 }
 
-.success{
-color:green;
-margin-top:15px;
-font-weight:bold;
-}
-
 @media (max-width:480px){
 .card{padding:20px;}
 .size-btn{flex:1 1 45%;font-size:14px;}
@@ -112,19 +126,21 @@ font-weight:bold;
 <div class="card">
 
 <h2>Commander votre Tee-shirt</h2>
+
+<div class="price">14,90€</div>
+
 <div class="subtitle">Paiement à la vie scolaire</div>
 
 <form id="orderForm">
 
 <input type="text" name="nom" placeholder="Nom" required>
-
 <input type="text" name="prenom" placeholder="Prénom" required>
-
 <input type="email" name="email" placeholder="Adresse mail" required>
-
 <input type="tel" name="telephone" placeholder="Numéro de téléphone" required>
 
-<input type="number" name="quantite" placeholder="Quantité de tee-shirts" min="1" max="10" required>
+<input type="number" name="quantite" id="quantite" placeholder="Quantité" min="1" max="10" value="1" required>
+
+<div id="totalPrice">Total : 14,90€</div>
 
 <p>Choisir la taille :</p>
 
@@ -139,24 +155,42 @@ font-weight:bold;
 
 <button class="submit" type="submit">Commander</button>
 
-<div class="success" id="successMsg"></div>
-
 </form>
 
 </div>
 
 <script>
 
-/* Initialisation EmailJS */
+/* EmailJS */
 
 (function(){
 emailjs.init("kDo3uvb5PTqrYJUHt");
 })();
 
-/* Gestion boutons tailles */
+/* Variables */
+
+const prix = 14.90;
+const quantiteInput = document.getElementById("quantite");
+const totalDisplay = document.getElementById("totalPrice");
+const tailleInput = document.getElementById("taille");
+
+/* Calcul du total */
+
+function updateTotal(){
+
+let quantite = parseInt(quantiteInput.value) || 1;
+
+let total = quantite * prix;
+
+totalDisplay.innerText = "Total : " + total.toFixed(2).replace(".", ",") + "€";
+
+}
+
+quantiteInput.addEventListener("input", updateTotal);
+
+/* Gestion tailles */
 
 let sizeButtons=document.querySelectorAll(".size-btn");
-let tailleInput=document.getElementById("taille");
 
 sizeButtons.forEach(btn=>{
 btn.addEventListener("click",function(){
@@ -176,14 +210,27 @@ document.getElementById("orderForm").addEventListener("submit",function(e){
 
 e.preventDefault();
 
-/* vérifie si une taille est sélectionnée */
-
 if(!tailleInput.value){
 alert("Merci de sélectionner une taille");
 return;
 }
 
-emailjs.sendForm("service_uztjipa","template_7pq5h6z",this)
+/* Ajout du total dans EmailJS */
+
+let quantite = quantiteInput.value;
+let total = (quantite * prix).toFixed(2).replace(".", ",");
+
+let formData = {
+nom: this.nom.value,
+prenom: this.prenom.value,
+email: this.email.value,
+telephone: this.telephone.value,
+taille: tailleInput.value,
+quantite: quantite,
+total: total + "€"
+};
+
+emailjs.send("service_uztjipa","template_7pq5h6z",formData)
 
 .then(function(){
 
