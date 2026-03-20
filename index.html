@@ -1,168 +1,6 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Commander votre Tee-shirt</title>
-
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:Arial;
-}
-
-body{
-background:#f5f5f5;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-}
-
-.card{
-background:white;
-border-radius:20px;
-width:90%;
-max-width:400px;
-padding:30px;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
-text-align:center;
-}
-
-.card h2{
-margin-bottom:5px;
-font-size:24px;
-}
-
-.price{
-font-size:28px;
-font-weight:bold;
-margin-bottom:5px;
-}
-
-.price::after{
-content:" TTC";
-font-size:14px;
-color:#777;
-margin-left:5px;
-}
-
-.subtitle{
-margin-bottom:20px;
-color:#555;
-font-size:14px;
-}
-
-input{
-width:90%;
-padding:12px;
-margin:10px 0;
-border-radius:8px;
-border:1px solid #ddd;
-}
-
-#totalPrice{
-margin-top:10px;
-font-size:18px;
-font-weight:bold;
-color:#111;
-}
-
-.sizes{
-display:flex;
-justify-content:center;
-gap:10px;
-margin:15px 0 25px;
-flex-wrap:wrap;
-}
-
-.size-btn{
-flex:1 1 40%;
-padding:12px 0;
-border:2px solid black;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
-transition:0.3s;
-}
-
-.size-btn.active{
-background:black;
-color:white;
-transform:scale(1.05);
-}
-
-button.submit{
-background:black;
-color:white;
-border:none;
-padding:14px;
-width:100%;
-border-radius:12px;
-font-size:16px;
-cursor:pointer;
-}
-
-button.submit:hover{
-background:#333;
-}
-
-@media (max-width:480px){
-.card{padding:20px;}
-.size-btn{flex:1 1 45%;font-size:14px;}
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="card">
-
-<h2>Commander votre Tee-shirt</h2>
-
-<div class="price">14,90€</div>
-
-<div class="subtitle">Paiement à la vie scolaire</div>
-
-<form id="orderForm">
-
-<input type="text" name="nom" placeholder="Nom" required>
-<input type="text" name="prenom" placeholder="Prénom" required>
-<input type="email" name="email" placeholder="Adresse mail" required>
-<input type="tel" name="telephone" placeholder="Numéro de téléphone" required>
-
-<input type="number" name="quantite" id="quantite" placeholder="Quantité" min="1" max="10" value="1" required>
-
-<div id="totalPrice">Total : 14,90€</div>
-
-<p>Choisir la taille :</p>
-
-<div class="sizes">
-<div class="size-btn" data-size="XS">XS</div>
-<div class="size-btn" data-size="S">S</div>
-<div class="size-btn" data-size="M">M</div>
-<div class="size-btn" data-size="L">L</div>
-</div>
-
-<input type="hidden" name="taille" id="taille">
-
-<button class="submit" type="submit">Commander</button>
-
-</form>
-
-</div>
-
 <script>
 
 /* EmailJS */
-
 (function(){
 emailjs.init("kDo3uvb5PTqrYJUHt");
 })();
@@ -170,6 +8,7 @@ emailjs.init("kDo3uvb5PTqrYJUHt");
 /* Variables */
 
 const prix = 14.90;
+const form = document.getElementById("orderForm");
 const quantiteInput = document.getElementById("quantite");
 const totalDisplay = document.getElementById("totalPrice");
 const tailleInput = document.getElementById("taille");
@@ -177,81 +16,48 @@ const tailleInput = document.getElementById("taille");
 /* Calcul du total */
 
 function updateTotal(){
-
 let quantite = parseInt(quantiteInput.value) || 1;
-
 let total = quantite * prix;
 
 totalDisplay.innerText = "Total : " + total.toFixed(2).replace(".", ",") + "€";
-
 }
 
 quantiteInput.addEventListener("input", updateTotal);
 
 /* Gestion tailles */
 
-let sizeButtons=document.querySelectorAll(".size-btn");
-
-sizeButtons.forEach(btn=>{
+document.querySelectorAll(".size-btn").forEach(btn=>{
 btn.addEventListener("click",function(){
 
-sizeButtons.forEach(b=>b.classList.remove("active"));
+document.querySelectorAll(".size-btn").forEach(b=>b.classList.remove("active"));
 
 this.classList.add("active");
-
 tailleInput.value=this.dataset.size;
 
 });
 });
 
-/* Envoi formulaire */
+/* ENVOI FORMULAIRE (VERSION PROPRE) */
 
-document.getElementById("orderForm").addEventListener("submit",function(e){
+form.addEventListener("submit", function(e){
 
 e.preventDefault();
 
+/* Vérification taille */
 if(!tailleInput.value){
 alert("Merci de sélectionner une taille");
 return;
 }
 
-/* Ajout du total dans EmailJS */
-
+/* Récupération des données */
+let nom = form.nom.value;
+let prenom = form.prenom.value;
+let email = form.email.value;
+let telephone = form.telephone.value;
 let quantite = quantiteInput.value;
 let total = (quantite * prix).toFixed(2).replace(".", ",");
 
-let formData = {
-nom: this.nom.value,
-prenom: this.prenom.value,
-email: this.email.value,
-telephone: this.telephone.value,
-taille: tailleInput.value,
-quantite: quantite,
-total: total + "€"
-};
-
-emailjs.send("service_uztjipa","template_7pq5h6z",formData)
-
-document.getElementById("orderForm").addEventListener("submit", function(e){
-
-e.preventDefault();
-
-if(!tailleInput.value){
-alert("Merci de sélectionner une taille");
-return;
-}
-
-/* On stocke les valeurs AVANT */
-
-let nom = this.nom.value;
-let prenom = this.prenom.value;
-let email = this.email.value;
-let telephone = this.telephone.value;
-let quantite = quantiteInput.value;
-let total = (quantite * prix).toFixed(2).replace(".", ",");
-
-/* Email */
-
+/* Données EmailJS */
 let formData = {
 nom: nom,
 prenom: prenom,
@@ -262,11 +68,9 @@ quantite: quantite,
 total: total + "€"
 };
 
+/* Envoi + redirection */
 emailjs.send("service_uztjipa","template_7pq5h6z",formData)
-
 .then(function(){
-
-/* Redirection OK */
 
 window.location.href =
 "./confirmation.html?total=" + encodeURIComponent(total) +
@@ -275,27 +79,11 @@ window.location.href =
 "&taille=" + encodeURIComponent(tailleInput.value) +
 "&quantite=" + encodeURIComponent(quantite);
 
-},
-
-function(error){
-
-alert("Erreur : "+JSON.stringify(error));
-
-});
-
-});
-
-},
-
-function(error){
-
-alert("Erreur : "+JSON.stringify(error));
-
+})
+.catch(function(error){
+alert("Erreur : " + JSON.stringify(error));
 });
 
 });
 
 </script>
-
-</body>
-</html>
