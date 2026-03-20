@@ -232,14 +232,58 @@ total: total + "€"
 
 emailjs.send("service_uztjipa","template_7pq5h6z",formData)
 
+document.getElementById("orderForm").addEventListener("submit", function(e){
+
+e.preventDefault();
+
+if(!tailleInput.value){
+alert("Merci de sélectionner une taille");
+return;
+}
+
+/* On stocke les valeurs AVANT */
+
+let nom = this.nom.value;
+let prenom = this.prenom.value;
+let email = this.email.value;
+let telephone = this.telephone.value;
+let quantite = quantiteInput.value;
+let total = (quantite * prix).toFixed(2).replace(".", ",");
+
+/* Email */
+
+let formData = {
+nom: nom,
+prenom: prenom,
+email: email,
+telephone: telephone,
+taille: tailleInput.value,
+quantite: quantite,
+total: total + "€"
+};
+
+emailjs.send("service_uztjipa","template_7pq5h6z",formData)
+
 .then(function(){
 
+/* Redirection OK */
+
 window.location.href =
-"confirmation.html?total=" + encodeURIComponent(total) +
-"&nom=" + encodeURIComponent(this.nom.value) +
-"&prenom=" + encodeURIComponent(this.prenom.value) +
+"./confirmation.html?total=" + encodeURIComponent(total) +
+"&nom=" + encodeURIComponent(nom) +
+"&prenom=" + encodeURIComponent(prenom) +
 "&taille=" + encodeURIComponent(tailleInput.value) +
 "&quantite=" + encodeURIComponent(quantite);
+
+},
+
+function(error){
+
+alert("Erreur : "+JSON.stringify(error));
+
+});
+
+});
 
 },
 
