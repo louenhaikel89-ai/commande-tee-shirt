@@ -41,14 +41,35 @@ margin-bottom:15px;
 }
 
 h1{
-margin-bottom:15px;
+margin-bottom:10px;
 font-size:26px;
 }
 
-p{
+.total{
+font-size:22px;
+font-weight:bold;
+margin:15px 0;
+color:#111;
+}
+
+.resume{
+background:#f9f9f9;
+border-radius:10px;
+padding:15px;
+margin-bottom:20px;
+text-align:left;
+font-size:14px;
+color:#333;
+}
+
+.resume p{
+margin:5px 0;
+}
+
+.info{
 color:#555;
-font-size:16px;
-margin-bottom:30px;
+font-size:15px;
+margin-bottom:25px;
 line-height:1.5;
 }
 
@@ -79,18 +100,6 @@ transform:translateY(0);
 }
 }
 
-@media (max-width:480px){
-
-.card{
-padding:25px;
-}
-
-h1{
-font-size:22px;
-}
-
-}
-
 </style>
 
 </head>
@@ -103,17 +112,55 @@ font-size:22px;
 
 <h1>Commande confirmée</h1>
 
-<p>
-Merci pour ton achat 👕<br><br>
-Ta commande a bien été enregistrée.<br>
-Le règlement se fera directement à <strong>la vie scolaire</strong>.
-</p>
+<div class="total" id="totalDisplay">Total : -- €</div>
 
-<a href="index.html">
-<button>Retour au site</button>
-</a>
+<div class="resume">
+<p><strong>Nom :</strong> <span id="nom"></span></p>
+<p><strong>Prénom :</strong> <span id="prenom"></span></p>
+<p><strong>Taille :</strong> <span id="taille"></span></p>
+<p><strong>Quantité :</strong> <span id="quantite"></span></p>
+</div>
+
+<div class="info">
+Merci pour ton achat 👕<br><br>
+Ta commande a bien été enregistrée.<br><br>
+
+💸 Le règlement s’effectuera à la <strong>vie scolaire</strong><br>
+Modes de paiement acceptés :<br>
+💵 Espèces<br>
+🧾 Chèque
+</div>
+
+<button onclick="window.location.href='index.html'">
+Retour au site
+</button>
 
 </div>
+
+<script>
+
+/* Récupération des données URL */
+
+const params = new URLSearchParams(window.location.search);
+
+const total = params.get("total");
+const nom = params.get("nom");
+const prenom = params.get("prenom");
+const taille = params.get("taille");
+const quantite = params.get("quantite");
+
+/* Affichage */
+
+if(total){
+document.getElementById("totalDisplay").innerText = "Total : " + total + "€";
+}
+
+if(nom) document.getElementById("nom").innerText = nom;
+if(prenom) document.getElementById("prenom").innerText = prenom;
+if(taille) document.getElementById("taille").innerText = taille;
+if(quantite) document.getElementById("quantite").innerText = quantite;
+
+</script>
 
 </body>
 </html>
