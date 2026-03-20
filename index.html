@@ -234,7 +234,12 @@ emailjs.send("service_uztjipa","template_7pq5h6z",formData)
 
 .then(function(){
 
-window.location.href="confirmation.html";
+window.location.href=
+"confirmation.html?total="+total+
+"&nom="+this.nom.value+
+"&prenom="+this.prenom.value+
+"&taille="+tailleInput.value+
+"&quantite="+quantite;
 
 },
 
