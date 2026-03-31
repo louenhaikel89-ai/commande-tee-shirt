@@ -6,7 +6,6 @@ emailjs.init("kDo3uvb5PTqrYJUHt");
 })();
 
 /* Variables */
-
 const prix = 14.90;
 const form = document.getElementById("orderForm");
 const quantiteInput = document.getElementById("quantite");
@@ -14,7 +13,6 @@ const totalDisplay = document.getElementById("totalPrice");
 const tailleInput = document.getElementById("taille");
 
 /* Calcul du total */
-
 function updateTotal(){
 let quantite = parseInt(quantiteInput.value) || 1;
 let total = quantite * prix;
@@ -25,20 +23,18 @@ totalDisplay.innerText = "Total : " + total.toFixed(2).replace(".", ",") + "€"
 quantiteInput.addEventListener("input", updateTotal);
 
 /* Gestion tailles */
-
 document.querySelectorAll(".size-btn").forEach(btn=>{
 btn.addEventListener("click",function(){
 
 document.querySelectorAll(".size-btn").forEach(b=>b.classList.remove("active"));
 
 this.classList.add("active");
-tailleInput.value=this.dataset.size;
+tailleInput.value = this.dataset.size;
 
 });
 });
 
-/* ENVOI FORMULAIRE (VERSION PROPRE) */
-
+/* Envoi formulaire */
 form.addEventListener("submit", function(e){
 
 e.preventDefault();
@@ -49,7 +45,7 @@ alert("Merci de sélectionner une taille");
 return;
 }
 
-/* Récupération des données */
+/* Récupération données */
 let nom = form.nom.value;
 let prenom = form.prenom.value;
 let email = form.email.value;
@@ -57,7 +53,7 @@ let telephone = form.telephone.value;
 let quantite = quantiteInput.value;
 let total = (quantite * prix).toFixed(2).replace(".", ",");
 
-/* Données EmailJS */
+/* EmailJS */
 let formData = {
 nom: nom,
 prenom: prenom,
@@ -68,10 +64,11 @@ quantite: quantite,
 total: total + "€"
 };
 
-/* Envoi + redirection */
 emailjs.send("service_uztjipa","template_7pq5h6z",formData)
-.then(function(){
 
+.then(() => {
+
+/* Redirection */
 window.location.href =
 "./confirmation.html?total=" + encodeURIComponent(total) +
 "&nom=" + encodeURIComponent(nom) +
@@ -80,7 +77,8 @@ window.location.href =
 "&quantite=" + encodeURIComponent(quantite);
 
 })
-.catch(function(error){
+
+.catch(error => {
 alert("Erreur : " + JSON.stringify(error));
 });
 
