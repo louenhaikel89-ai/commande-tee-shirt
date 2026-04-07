@@ -1,17 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>OK</title>
+<title>Commande validée</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#f5f5f5,#eaeaea);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.card{
+background:white;
+padding:40px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+h1{margin-bottom:10px;}
+
+p{color:#555;margin-bottom:20px;}
+
+button{
+padding:12px 20px;
+background:black;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+</style>
+
 </head>
 
-<body style="text-align:center;font-family:Arial">
+<body>
 
-<h1>Commande validée 🎉</h1>
+<div class="card">
 
-<p>Paiement à la vie scolaire</p>
+<h1>Commande confirmée 🎉</h1>
 
-<a href="index.html">Retour</a>
+<p>
+Merci pour ton achat 👕<br>
+Paiement à la vie scolaire<br>
+Espèces ou chèque
+</p>
+
+<button onclick="window.location.href='index.html'">
+Retour
+</button>
+
+</div>
 
 </body>
 </html>
