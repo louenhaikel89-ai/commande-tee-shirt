@@ -2,17 +2,96 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Commande Tee-shirt</title>
+<title>Commander votre Tee-shirt</title>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{font-family:Arial;background:#f5f5f5;display:flex;justify-content:center;align-items:center;height:100vh;}
-.card{background:white;padding:30px;border-radius:20px;width:300px;text-align:center;}
-input{width:90%;padding:10px;margin:10px 0;}
-button{padding:12px;width:100%;background:black;color:white;border:none;}
-.size-btn{border:1px solid black;padding:10px;margin:5px;cursor:pointer;}
-.active{background:black;color:white;}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial;}
+
+body{
+background:linear-gradient(135deg,#f5f5f5,#eaeaea);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+.card{
+background:white;
+border-radius:20px;
+width:90%;
+max-width:400px;
+padding:30px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+h2{margin-bottom:5px;}
+
+.price{
+font-size:28px;
+font-weight:bold;
+}
+
+.subtitle{
+margin-bottom:20px;
+color:#666;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+#total{
+font-weight:bold;
+margin:10px 0;
+font-size:18px;
+}
+
+.sizes{
+display:flex;
+gap:10px;
+margin:15px 0;
+}
+
+.size-btn{
+flex:1;
+padding:10px;
+border:2px solid black;
+border-radius:10px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.size-btn.active{
+background:black;
+color:white;
+transform:scale(1.05);
+}
+
+button{
+background:black;
+color:white;
+padding:14px;
+width:100%;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:16px;
+}
+
+button:hover{
+background:#333;
+}
+
 </style>
 </head>
 
@@ -20,24 +99,29 @@ button{padding:12px;width:100%;background:black;color:white;border:none;}
 
 <div class="card">
 
-<h2>Commande Tee-shirt</h2>
+<h2>Commander votre Tee-shirt</h2>
+<div class="price">14,90€</div>
+<div class="subtitle">Paiement à la vie scolaire</div>
 
 <form id="form">
 
-<input type="text" name="nom" placeholder="Nom" required>
-<input type="text" name="prenom" placeholder="Prénom" required>
+<input name="nom" placeholder="Nom" required>
+<input name="prenom" placeholder="Prénom" required>
+<input name="email" placeholder="Email" required>
+<input name="telephone" placeholder="Téléphone" required>
 
 <input type="number" id="quantite" value="1" min="1">
 
 <div id="total">Total : 14,90€</div>
 
-<div>
+<div class="sizes">
+<div class="size-btn" data-size="XS">XS</div>
 <div class="size-btn" data-size="S">S</div>
 <div class="size-btn" data-size="M">M</div>
 <div class="size-btn" data-size="L">L</div>
 </div>
 
-<input type="hidden" id="taille">
+<input type="hidden" id="taille" name="taille">
 
 <button type="submit">Commander</button>
 
@@ -47,16 +131,19 @@ button{padding:12px;width:100%;background:black;color:white;border:none;}
 
 <script>
 
+/* EmailJS */
+emailjs.init("kDo3uvb5PTqrYJUHt");
+
+/* Variables */
 const prix = 14.90;
-const quantiteInput = document.getElementById("quantite");
-const totalDisplay = document.getElementById("total");
-const tailleInput = document.getElementById("taille");
+const quantite = document.getElementById("quantite");
+const total = document.getElementById("total");
+const taille = document.getElementById("taille");
 
 /* Prix dynamique */
-quantiteInput.addEventListener("input", ()=>{
-let q = quantiteInput.value;
-let total = q * prix;
-totalDisplay.innerText = "Total : " + total.toFixed(2).replace(".", ",") + "€";
+quantite.addEventListener("input", ()=>{
+let t = quantite.value * prix;
+total.innerText = "Total : " + t.toFixed(2).replace(".", ",") + "€";
 });
 
 /* Tailles */
@@ -64,21 +151,40 @@ document.querySelectorAll(".size-btn").forEach(btn=>{
 btn.onclick = ()=>{
 document.querySelectorAll(".size-btn").forEach(b=>b.classList.remove("active"));
 btn.classList.add("active");
-tailleInput.value = btn.dataset.size;
+taille.value = btn.dataset.size;
 };
 });
 
-/* Redirection simple */
+/* Envoi */
 document.getElementById("form").onsubmit = function(e){
+
 e.preventDefault();
 
-if(!tailleInput.value){
+if(!taille.value){
 alert("Choisis une taille");
 return;
 }
 
-/* REDIRECTION DIRECTE */
+let t = (quantite.value * prix).toFixed(2).replace(".", ",");
+
+emailjs.send("service_uztjipa","template_7pq5h6z",{
+nom:this.nom.value,
+prenom:this.prenom.value,
+email:this.email.value,
+telephone:this.telephone.value,
+taille:taille.value,
+quantite:quantite.value,
+total:t+"€"
+})
+
+.then(()=>{
 window.location.href = "confirmation.html";
+})
+
+.catch(()=>{
+alert("Erreur envoi");
+});
+
 };
 
 </script>
