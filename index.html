@@ -1,87 +1,191 @@
-<script>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Commander votre Tee-shirt</title>
 
-/* EmailJS */
-(function(){
-emailjs.init("kDo3uvb5PTqrYJUHt");
-})();
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-/* Variables */
-const prix = 14.90;
-const form = document.getElementById("orderForm");
-const quantiteInput = document.getElementById("quantite");
-const totalDisplay = document.getElementById("totalPrice");
-const tailleInput = document.getElementById("taille");
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-/* Calcul du total */
-function updateTotal(){
-let quantite = parseInt(quantiteInput.value) || 1;
-let total = quantite * prix;
+<style>
 
-totalDisplay.innerText = "Total : " + total.toFixed(2).replace(".", ",") + "€";
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial;}
+
+body{
+background:#f5f5f5;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
 }
 
-quantiteInput.addEventListener("input", updateTotal);
+.card{
+background:white;
+border-radius:20px;
+width:90%;
+max-width:400px;
+padding:30px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+text-align:center;
+}
 
-/* Gestion tailles */
+.price{
+font-size:28px;
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.subtitle{
+margin-bottom:20px;
+color:#555;
+font-size:14px;
+}
+
+input{
+width:90%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+#total{
+font-size:18px;
+font-weight:bold;
+margin-top:10px;
+}
+
+.sizes{
+display:flex;
+gap:10px;
+margin:15px 0;
+flex-wrap:wrap;
+}
+
+.size-btn{
+flex:1;
+padding:10px;
+border:2px solid black;
+border-radius:10px;
+cursor:pointer;
+}
+
+.size-btn.active{
+background:black;
+color:white;
+}
+
+button{
+background:black;
+color:white;
+padding:14px;
+width:100%;
+border-radius:12px;
+border:none;
+cursor:pointer;
+}
+
+.success{
+color:green;
+margin-top:15px;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Commander votre Tee-shirt</h2>
+<div class="price">14,90€</div>
+<div class="subtitle">Paiement à la vie scolaire</div>
+
+<form id="form">
+
+<input type="text" name="nom" placeholder="Nom" required>
+<input type="text" name="prenom" placeholder="Prénom" required>
+<input type="email" name="email" placeholder="Email" required>
+
+<input type="number" id="quantite" placeholder="Quantité" value="1" min="1" required>
+
+<div id="total">Total : 14,90€</div>
+
+<div class="sizes">
+<div class="size-btn" data-size="XS">XS</div>
+<div class="size-btn" data-size="S">S</div>
+<div class="size-btn" data-size="M">M</div>
+<div class="size-btn" data-size="L">L</div>
+</div>
+
+<input type="hidden" id="taille" name="taille">
+
+<button type="submit">Commander</button>
+
+<div class="success" id="msg"></div>
+
+</form>
+
+</div>
+
+<script>
+
+emailjs.init("kDo3uvb5PTqrYJUHt");
+
+const prix = 14.90;
+const quantiteInput = document.getElementById("quantite");
+const totalDisplay = document.getElementById("total");
+const tailleInput = document.getElementById("taille");
+
+/* CALCUL TOTAL */
+quantiteInput.addEventListener("input", () => {
+let q = parseInt(quantiteInput.value) || 1;
+let total = q * prix;
+totalDisplay.innerText = "Total : " + total.toFixed(2).replace(".", ",") + "€";
+});
+
+/* TAILLES */
 document.querySelectorAll(".size-btn").forEach(btn=>{
-btn.addEventListener("click",function(){
-
+btn.onclick = () => {
 document.querySelectorAll(".size-btn").forEach(b=>b.classList.remove("active"));
-
-this.classList.add("active");
-tailleInput.value = this.dataset.size;
-
-});
+btn.classList.add("active");
+tailleInput.value = btn.dataset.size;
+};
 });
 
-/* Envoi formulaire */
-form.addEventListener("submit", function(e){
+/* ENVOI */
+document.getElementById("form").addEventListener("submit", function(e){
 
 e.preventDefault();
 
-/* Vérification taille */
 if(!tailleInput.value){
-alert("Merci de sélectionner une taille");
+alert("Choisis une taille");
 return;
 }
 
-/* Récupération données */
-let nom = form.nom.value;
-let prenom = form.prenom.value;
-let email = form.email.value;
-let telephone = form.telephone.value;
-let quantite = quantiteInput.value;
-let total = (quantite * prix).toFixed(2).replace(".", ",");
+let q = quantiteInput.value;
+let total = (q * prix).toFixed(2).replace(".", ",");
 
-/* EmailJS */
-let formData = {
-nom: nom,
-prenom: prenom,
-email: email,
-telephone: telephone,
-taille: tailleInput.value,
-quantite: quantite,
-total: total + "€"
-};
-
-emailjs.send("service_uztjipa","template_7pq5h6z",formData)
-
-.then(() => {
-
-/* Redirection */
-window.location.href =
-"./confirmation.html?total=" + encodeURIComponent(total) +
-"&nom=" + encodeURIComponent(nom) +
-"&prenom=" + encodeURIComponent(prenom) +
-"&taille=" + encodeURIComponent(tailleInput.value) +
-"&quantite=" + encodeURIComponent(quantite);
-
+emailjs.send("service_uztjipa","template_7pq5h6z",{
+nom:this.nom.value,
+prenom:this.prenom.value,
+email:this.email.value,
+taille:tailleInput.value,
+quantite:q,
+total:total+"€"
 })
 
-.catch(error => {
-alert("Erreur : " + JSON.stringify(error));
+.then(()=>{
+document.getElementById("msg").innerText = "Commande envoyée ! Paiement à la vie scolaire.";
+this.reset();
+totalDisplay.innerText = "Total : 14,90€";
 });
 
 });
 
 </script>
+
+</body>
+</html>
