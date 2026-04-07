@@ -160,18 +160,47 @@ document.getElementById("form").onsubmit = function(e){
 
 e.preventDefault();
 
+/* Récupération */
+let email = this.email.value.trim();
+let telephone = this.telephone.value.trim();
+
+/* Regex */
+let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+let telRegex = /^[0-9]{10}$/;
+
+/* Reset styles */
+this.email.style.border = "1px solid #ddd";
+this.telephone.style.border = "1px solid #ddd";
+
+/* Vérification email */
+if(!emailRegex.test(email)){
+alert("Email invalide ❌");
+this.email.style.border = "2px solid red";
+return;
+}
+
+/* Vérification téléphone */
+if(!telRegex.test(telephone)){
+alert("Numéro invalide (10 chiffres) ❌");
+this.telephone.style.border = "2px solid red";
+return;
+}
+
+/* Vérification taille */
 if(!taille.value){
 alert("Choisis une taille");
 return;
 }
 
+/* Calcul total */
 let t = (quantite.value * prix).toFixed(2).replace(".", ",");
 
+/* Envoi */
 emailjs.send("service_uztjipa","template_7pq5h6z",{
 nom:this.nom.value,
 prenom:this.prenom.value,
-email:this.email.value,
-telephone:this.telephone.value,
+email:email,
+telephone:telephone,
 taille:taille.value,
 quantite:quantite.value,
 total:t+"€"
