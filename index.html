@@ -172,10 +172,15 @@ emailjs.send("service_uztjipa","template_7pq5h6z",{
 nom:this.nom.value,
 prenom:this.prenom.value,
 email:this.email.value,
+telephone:this.telephone.value,
 taille:tailleInput.value,
 quantite:q,
 total:total+"€"
 })
+
+.then(()=>{
+window.location.href="confirmation.html";
+});
 
 .then(()=>{
 document.getElementById("msg").innerText = "Commande envoyée ! Paiement à la vie scolaire.";
