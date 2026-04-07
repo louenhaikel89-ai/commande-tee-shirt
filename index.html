@@ -1,83 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Commande Tee-shirt</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{font-family:Arial;background:#f5f5f5;display:flex;justify-content:center;align-items:center;height:100vh;}
+.card{background:white;padding:30px;border-radius:20px;width:300px;text-align:center;}
+input{width:90%;padding:10px;margin:10px 0;}
+button{padding:12px;width:100%;background:black;color:white;border:none;}
+.size-btn{border:1px solid black;padding:10px;margin:5px;cursor:pointer;}
+.active{background:black;color:white;}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Commande Tee-shirt</h2>
+
+<form id="form">
+
+<input type="text" name="nom" placeholder="Nom" required>
+<input type="text" name="prenom" placeholder="Prénom" required>
+
+<input type="number" id="quantite" value="1" min="1">
+
+<div id="total">Total : 14,90€</div>
+
+<div>
+<div class="size-btn" data-size="S">S</div>
+<div class="size-btn" data-size="M">M</div>
+<div class="size-btn" data-size="L">L</div>
+</div>
+
+<input type="hidden" id="taille">
+
+<button type="submit">Commander</button>
+
+</form>
+
+</div>
+
 <script>
 
-/* Initialisation EmailJS */
-(function(){
-emailjs.init("kDo3uvb5PTqrYJUHt");
-})();
-
-/* Variables */
 const prix = 14.90;
-const form = document.getElementById("form");
 const quantiteInput = document.getElementById("quantite");
 const totalDisplay = document.getElementById("total");
 const tailleInput = document.getElementById("taille");
 
-/* Calcul du total */
-function updateTotal(){
-let q = parseInt(quantiteInput.value) || 1;
+/* Prix dynamique */
+quantiteInput.addEventListener("input", ()=>{
+let q = quantiteInput.value;
 let total = q * prix;
-
 totalDisplay.innerText = "Total : " + total.toFixed(2).replace(".", ",") + "€";
-}
+});
 
-quantiteInput.addEventListener("input", updateTotal);
-
-/* Gestion des tailles */
+/* Tailles */
 document.querySelectorAll(".size-btn").forEach(btn=>{
-btn.addEventListener("click",function(){
-
+btn.onclick = ()=>{
 document.querySelectorAll(".size-btn").forEach(b=>b.classList.remove("active"));
-
-this.classList.add("active");
-tailleInput.value = this.dataset.size;
-
-});
+btn.classList.add("active");
+tailleInput.value = btn.dataset.size;
+};
 });
 
-/* Envoi du formulaire */
-form.addEventListener("submit", function(e){
-
+/* Redirection simple */
+document.getElementById("form").onsubmit = function(e){
 e.preventDefault();
 
-/* Vérification taille */
 if(!tailleInput.value){
-alert("Merci de sélectionner une taille");
+alert("Choisis une taille");
 return;
 }
 
-/* Récupération des données */
-let nom = form.nom.value;
-let prenom = form.prenom.value;
-let email = form.email.value;
-let telephone = form.telephone.value;
-let quantite = quantiteInput.value;
-let total = (quantite * prix).toFixed(2).replace(".", ",");
-
-/* Données pour EmailJS */
-let formData = {
-nom: nom,
-prenom: prenom,
-email: email,
-telephone: telephone,
-taille: tailleInput.value,
-quantite: quantite,
-total: total + "€"
+/* REDIRECTION DIRECTE */
+window.location.href = "confirmation.html";
 };
 
-/* Envoi + redirection */
-emailjs.send("service_uztjipa","template_7pq5h6z",formData)
-
-.then(() => {
-
-/* REDIRECTION QUI MARCHE SUR GITHUB */
-window.location.href = "/commande-tee-shirt/confirmation.html";
-
-})
-
-.catch(error => {
-alert("Erreur : " + JSON.stringify(error));
-});
-
-});
-
 </script>
+
+</body>
+</html>
